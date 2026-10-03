@@ -16,6 +16,7 @@ while IFS= read -r rel; do
   [[ -n "$rel" ]] || continue
   case "$rel" in
     schemaVersion=*|repository=*|installedAt=*) continue ;;
+    file=*) rel="${rel#file=}" ;;
   esac
   target="$CONFIG_DIR/$rel"
   if [[ -f "$target" || -L "$target" ]]; then
@@ -29,6 +30,7 @@ while IFS= read -r rel; do
   [[ -n "$rel" ]] || continue
   case "$rel" in
     schemaVersion=*|repository=*|installedAt=*) continue ;;
+    file=*) rel="${rel#file=}" ;;
   esac
   dir="$CONFIG_DIR/$(dirname "$rel")"
   while [[ "$dir" != "$CONFIG_DIR" && "$dir" == "$CONFIG_DIR"/* ]]; do

@@ -77,8 +77,15 @@ is_current_file() {
   return 1
 }
 
-# Backup every existing managed file before replacing/removing it.
-for rel in "${PREVIOUS_FILES[@]}" "${SOURCE_FILES[@]}"; do
+# Backup every existing managed file before replacing/removing it. The
+# candidate list is built explicitly because expanding "${arr[@]}" on an
+# empty array aborts under `set -u` in bash 3.2 (the macOS default).
+BACKUP_CANDIDATES=()
+if [[ "${#PREVIOUS_FILES[@]}" -gt 0 ]]; then
+  BACKUP_CANDIDATES+=("${PREVIOUS_FILES[@]}")
+fi
+BACKUP_CANDIDATES+=("${SOURCE_FILES[@]}")
+for rel in "${BACKUP_CANDIDATES[@]}"; do
   [[ -n "$rel" ]] || continue
   dest="$CONFIG_DIR/$rel"
   if [[ -e "$dest" || -L "$dest" ]]; then
@@ -94,16 +101,18 @@ for rel in "${PREVIOUS_FILES[@]}" "${SOURCE_FILES[@]}"; do
 done
 
 # Remove previously managed files that disappeared from the repository.
-for rel in "${PREVIOUS_FILES[@]}"; do
-  [[ -n "$rel" ]] || continue
-  if ! is_current_file "$rel"; then
-    dest="$CONFIG_DIR/$rel"
-    if [[ -e "$dest" || -L "$dest" ]]; then
-      rm -f "$dest"
-      REMOVED_STALE=$((REMOVED_STALE + 1))
+if [[ "${#PREVIOUS_FILES[@]}" -gt 0 ]]; then
+  for rel in "${PREVIOUS_FILES[@]}"; do
+    [[ -n "$rel" ]] || continue
+    if ! is_current_file "$rel"; then
+      dest="$CONFIG_DIR/$rel"
+      if [[ -e "$dest" || -L "$dest" ]]; then
+        rm -f "$dest"
+        REMOVED_STALE=$((REMOVED_STALE + 1))
+      fi
     fi
-  fi
-done
+  done
+fi
 
 for rel in "${SOURCE_FILES[@]}"; do
   src="$SCRIPT_DIR/$rel"
