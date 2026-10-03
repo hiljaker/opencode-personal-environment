@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "name": "personal-opencode-environment",
+  "name": "opencode-personal-environment",
   "description": "Portable personal OpenCode environment with global config, agents, commands, skills, and optional extensions.",
   "configFormat": "opencode-v2",
   "installer": {

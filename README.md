@@ -4,18 +4,18 @@ A portable, Git-installable personal OpenCode environment. The repository is the
 
 ## One-command install
 
-Once this repository is public on GitHub, a new macOS/Linux device can install the environment without cloning it first:
+A new macOS/Linux device can install the environment without cloning it first:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hiljaker/personal-opencode-environment/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash
 ```
 
-Before pushing the repository, replace `YOUR_GITHUB_USERNAME/personal-opencode-environment` in the root `install.sh` with the real GitHub `owner/repository`. The remote bootstrap then downloads the selected branch/tag archive and runs the local installer from a temporary directory.
+The default repository slug in the root `install.sh` is `hiljaker/opencode-personal-environment`. Override it at runtime, for example when installing from a fork, with `OPENCODE_ENV_REPO=owner/repository`, and select a branch or tag with `OPENCODE_ENV_REF`. The remote bootstrap then downloads the selected branch/tag archive and runs the local installer from a temporary directory.
 
-For a pinned release instead of `main`:
+For a pinned release instead of `main`, once a release tag exists:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hiljaker/personal-opencode-environment/v1.0.0/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/v1.0.0/install.sh | bash
 ```
 
 The repository itself remains the source of truth; no permanent clone is required just to install or update the environment.
@@ -46,7 +46,7 @@ All skills are intentionally project-agnostic. They should describe engineering 
 Re-run the same command:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hiljaker/personal-opencode-environment/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash
 ```
 
 The installer backs up currently managed files before replacing them. It also removes files that this repository previously managed but no longer ships, while leaving unrelated files in the OpenCode config directory untouched.

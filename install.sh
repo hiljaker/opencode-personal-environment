@@ -4,16 +4,16 @@ set -euo pipefail
 # Bootstrap installer for the portable Personal OpenCode Environment.
 #
 # Remote install:
-#   curl -fsSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/personal-opencode-environment/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash
 #
-# Before publishing this repository, replace REPOSITORY_SLUG below with the
-# actual public GitHub owner/repository. It is also overridable at runtime:
+# REPOSITORY_SLUG defaults to the public GitHub owner/repository below. It is
+# also overridable at runtime:
 #   OPENCODE_ENV_REPO=owner/repository OPENCODE_ENV_REF=main bash
 #
 # Local install:
 #   ./install.sh
 
-REPOSITORY_SLUG="${OPENCODE_ENV_REPO:-YOUR_GITHUB_USERNAME/personal-opencode-environment}"
+REPOSITORY_SLUG="${OPENCODE_ENV_REPO:-hiljaker/opencode-personal-environment}"
 REF="${OPENCODE_ENV_REF:-main}"
 
 usage() {
