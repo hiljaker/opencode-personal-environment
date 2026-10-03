@@ -1,0 +1,23 @@
+# Dependencies and generated state
+node_modules/
+bun.lock
+package-lock.json
+
+# Secrets / local credentials
+.env
+.env.*
+*.key
+*.pem
+*.p12
+*.secret
+service.json
+auth.json
+
+# OS/editor artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local installer state / test output
+.opencode-local/

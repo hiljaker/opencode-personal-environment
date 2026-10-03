@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "name": "personal-opencode-environment",
+  "description": "Portable personal OpenCode environment with global config, agents, commands, skills, and optional extensions.",
+  "configFormat": "opencode-v2",
+  "installer": {
+    "remoteBootstrap": true,
+    "defaultRef": "main",
+    "publicGithubRepositoryRequired": true
+  },
+  "managed": {
+    "files": [
+      "opencode.jsonc",
+      "cli.json",
+      "AGENTS.md"
+    ],
+    "directories": [
+      "agents",
+      "commands",
+      "skills",
+      "plugins",
+      "tools",
+      "themes"
+    ]
+  },
+  "excluded": [
+    "auth.json",
+    "service.json",
+    ".env",
+    ".env.*",
+    "node_modules/",
+    "*.key",
+    "*.pem",
+    "*.p12",
+    "*.secret",
+    "session*",
+    "cache/"
+  ]
+}
