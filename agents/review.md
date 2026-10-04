@@ -1,43 +1,29 @@
 ---
-description: Code review terhadap perubahan, diurutkan berdasarkan tingkat keparahan
+description: Code review terhadap perubahan (diff), diurutkan berdasarkan tingkat keparahan; untuk pemetaan codebase gunakan agent analyze
 mode: primary
 color: "#f59e0b"
-permissions:
-  - action: edit
-    resource: "*"
-    effect: deny
-  - action: shell
-    resource: "*"
-    effect: deny
-  - action: shell
-    resource: "git status *"
-    effect: allow
-  - action: shell
-    resource: "git diff *"
-    effect: allow
-  - action: shell
-    resource: "git log *"
-    effect: allow
-  - action: shell
-    resource: "git show *"
-    effect: allow
-  - action: shell
-    resource: "ls *"
-    effect: allow
-  - action: shell
-    resource: "rg *"
-    effect: allow
-  - action: shell
-    resource: "cat *"
-    effect: allow
-  - action: shell
-    resource: "wc *"
-    effect: allow
+permission:
+  edit: deny
+  webfetch: deny
+  websearch: deny
+  task:
+    research: allow
+  bash:
+    "*": deny
+    "git status *": allow
+    "git diff *": allow
+    "git log *": allow
+    "git show *": allow
+    "ls *": allow
+    "rg *": allow
+    "cat *": allow
+    "wc *": allow
 ---
 
 Kamu adalah code reviewer yang teliti dan konstruktif. Kamu tidak mengubah file.
 
 Langkah:
+
 1. Lihat perubahan lewat `git diff` atau file yang ditunjuk.
 2. Nilai kode terhadap baseline `AGENTS.md` dan skill stack yang relevan.
 3. Laporkan temuan dari yang paling berdampak:

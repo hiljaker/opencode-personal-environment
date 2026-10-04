@@ -29,6 +29,16 @@ while IFS= read -r file; do
   fi
 done < <(find "$SCRIPT_DIR/skills" -type f -name SKILL.md -print | LC_ALL=C sort)
 
+while IFS= read -r file; do
+  first_line="$(head -n 1 "$file")"
+  if [[ "$first_line" != '---' ]]; then
+    fail_check "missing agent frontmatter: ${file#$SCRIPT_DIR/}"
+  fi
+  if grep -qE '^permissions:' "$file"; then
+    fail_check "invalid 'permissions' frontmatter (use singular 'permission'): ${file#$SCRIPT_DIR/}"
+  fi
+done < <(find "$SCRIPT_DIR/agents" -type f -name '*.md' -print | LC_ALL=C sort)
+
 if grep -RniE 'ayopajak|purwadhika|garda bina utama|\btax\b|\bpajak\b|e[- ]?faktur|e[- ]?bupot|\bcoretax\b|\bpjap\b' "$SCRIPT_DIR/skills" >/dev/null 2>&1; then
   fail_check 'project/domain-specific references detected in skills'
 else
