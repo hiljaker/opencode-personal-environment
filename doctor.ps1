@@ -26,6 +26,23 @@ Get-ChildItem -Path $skillsDir -Recurse -Filter 'SKILL.md' | ForEach-Object {
     }
 }
 
+$agentsDir = Join-Path $Repo 'agents'
+Get-ChildItem -Path $agentsDir -Filter '*.md' | ForEach-Object {
+    $agentLines = Get-Content $_.FullName
+    if ($agentLines[0] -ne '---') {
+        Write-Host "FAIL  missing agent frontmatter: $($_.Name)"
+        $Failed = $true
+    }
+    if ($agentLines -match '^permission:') {
+        Write-Host "FAIL  legacy 'permission' frontmatter (use native 'permissions'): $($_.Name)"
+        $Failed = $true
+    }
+    if (-not ($agentLines -match '^permissions:')) {
+        Write-Host "FAIL  missing native 'permissions' frontmatter: $($_.Name)"
+        $Failed = $true
+    }
+}
+
 $skillText = (Get-ChildItem $skillsDir -Recurse -Filter 'SKILL.md' | Get-Content -Raw) -join "`n"
 if ($skillText -match '(?i)ayopajak|purwadhika|garda bina utama|\btax\b|\bpajak\b|e[- ]?faktur|e[- ]?bupot|\bcoretax\b|\bpjap\b') {
     Write-Host 'FAIL  project/domain-specific references detected in skills'

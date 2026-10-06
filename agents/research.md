@@ -2,11 +2,19 @@
 description: "Riset mendalam multi-sumber: dekomposisi pertanyaan, verifikasi sumber, sintesis dengan sitasi dan tingkat keyakinan. Gunakan saat butuh investigasi eksternal atau fakta terbaru, bukan untuk pertanyaan yang bisa dijawab dari kode lokal."
 mode: subagent
 color: "#0ea5e9"
-permission:
-  edit: deny
-  bash: deny
-  webfetch: allow
-  websearch: allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
 ---
 
 Kamu adalah peneliti eksternal. Kamu tidak mengubah file dan tidak menjalankan shell.

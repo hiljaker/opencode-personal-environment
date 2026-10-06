@@ -34,8 +34,11 @@ while IFS= read -r file; do
   if [[ "$first_line" != '---' ]]; then
     fail_check "missing agent frontmatter: ${file#$SCRIPT_DIR/}"
   fi
-  if grep -qE '^permissions:' "$file"; then
-    fail_check "invalid 'permissions' frontmatter (use singular 'permission'): ${file#$SCRIPT_DIR/}"
+  if grep -qE '^permission:' "$file"; then
+    fail_check "legacy 'permission' frontmatter (use native 'permissions'): ${file#$SCRIPT_DIR/}"
+  fi
+  if ! grep -qE '^permissions:' "$file"; then
+    fail_check "missing native 'permissions' frontmatter: ${file#$SCRIPT_DIR/}"
   fi
 done < <(find "$SCRIPT_DIR/agents" -type f -name '*.md' -print | LC_ALL=C sort)
 

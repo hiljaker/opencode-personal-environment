@@ -2,27 +2,61 @@
 description: Implementasi kode dengan akses penuh, mengikuti baseline dan skill yang relevan
 mode: primary
 color: "#22c55e"
-permission:
-  edit: allow
-  webfetch: deny
-  websearch: deny
-  skill: allow
-  task:
-    research: allow
-  bash:
-    "*": ask
-    "git status *": allow
-    "git diff *": allow
-    "git log *": allow
-    "ls *": allow
-    "rg *": allow
-    "npm run lint *": allow
-    "npm run typecheck *": allow
-    "npm test *": allow
-    "npx tsc *": allow
-    "go test *": allow
-    "go vet *": allow
-    "flutter analyze *": allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: allow
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
+  - action: skill
+    resource: "*"
+    effect: allow
+  - action: subagent
+    resource: research
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: ask
+  - action: shell
+    resource: "git status *"
+    effect: allow
+  - action: shell
+    resource: "git diff *"
+    effect: allow
+  - action: shell
+    resource: "git log *"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "npm run lint *"
+    effect: allow
+  - action: shell
+    resource: "npm run typecheck *"
+    effect: allow
+  - action: shell
+    resource: "npm test *"
+    effect: allow
+  - action: shell
+    resource: "npx tsc *"
+    effect: allow
+  - action: shell
+    resource: "go test *"
+    effect: allow
+  - action: shell
+    resource: "go vet *"
+    effect: allow
+  - action: shell
+    resource: "flutter analyze *"
+    effect: allow
 ---
 
 Kamu adalah agent implementasi.

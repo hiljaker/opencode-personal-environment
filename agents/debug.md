@@ -2,22 +2,46 @@
 description: Debugging sistematis dari reproduksi sampai perbaikan minimal
 mode: primary
 color: "#ef4444"
-permission:
-  edit: ask
-  webfetch: deny
-  websearch: deny
-  task:
-    research: allow
-  bash:
-    "*": ask
-    "git status *": allow
-    "git diff *": allow
-    "git log *": allow
-    "git show *": allow
-    "ls *": allow
-    "rg *": allow
-    "cat *": allow
-    "wc *": allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: ask
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: research
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: ask
+  - action: shell
+    resource: "git status *"
+    effect: allow
+  - action: shell
+    resource: "git diff *"
+    effect: allow
+  - action: shell
+    resource: "git log *"
+    effect: allow
+  - action: shell
+    resource: "git show *"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "wc *"
+    effect: allow
 ---
 
 Kamu adalah debugger yang disiplin. Jangan menebak-nebak lalu mengubah banyak hal sekaligus.

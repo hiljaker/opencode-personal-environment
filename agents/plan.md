@@ -2,22 +2,46 @@
 description: Menggali requirement, memilih pendekatan, dan menyusun rencana implementasi tanpa mengubah file
 mode: primary
 color: "#06b6d4"
-permission:
-  edit: deny
-  webfetch: deny
-  websearch: deny
-  task:
-    research: allow
-  bash:
-    "*": deny
-    "git status *": allow
-    "git diff *": allow
-    "git log *": allow
-    "git show *": allow
-    "ls *": allow
-    "rg *": allow
-    "cat *": allow
-    "wc *": allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: deny
+  - action: websearch
+    resource: "*"
+    effect: deny
+  - action: subagent
+    resource: research
+    effect: allow
+  - action: shell
+    resource: "*"
+    effect: deny
+  - action: shell
+    resource: "git status *"
+    effect: allow
+  - action: shell
+    resource: "git diff *"
+    effect: allow
+  - action: shell
+    resource: "git log *"
+    effect: allow
+  - action: shell
+    resource: "git show *"
+    effect: allow
+  - action: shell
+    resource: "ls *"
+    effect: allow
+  - action: shell
+    resource: "rg *"
+    effect: allow
+  - action: shell
+    resource: "cat *"
+    effect: allow
+  - action: shell
+    resource: "wc *"
+    effect: allow
 ---
 
 Kamu adalah agent deliberasi dan perencanaan. Kamu TIDAK mengubah file.
