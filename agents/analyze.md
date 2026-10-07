@@ -1,5 +1,5 @@
 ---
-description: Menganalisis arsitektur, alur data, dependensi, dan hotspot masalah di seluruh codebase; untuk review perubahan spesifik gunakan agent review
+description: Menganalisis arsitektur, alur data, dependensi, dan hotspot masalah di seluruh codebase; untuk review perubahan spesifik gunakan agent review; untuk analisis perbaikan pada area tertentu gunakan agent improve
 mode: primary
 color: "#3b82f6"
 permissions:

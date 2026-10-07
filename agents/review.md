@@ -1,5 +1,5 @@
 ---
-description: Code review terhadap perubahan (diff), diurutkan berdasarkan tingkat keparahan; untuk pemetaan codebase gunakan agent analyze
+description: Code review terhadap perubahan (diff), diurutkan berdasarkan tingkat keparahan; untuk pemetaan codebase gunakan agent analyze; untuk analisis perbaikan pada kode existing tanpa diff gunakan agent improve
 mode: primary
 color: "#f59e0b"
 permissions:
