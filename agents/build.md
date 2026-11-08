@@ -1,5 +1,5 @@
 ---
-description: Implementasi kode dengan akses penuh, mengikuti baseline dan skill yang relevan
+description: Mengubah kode dengan akses penuh, mengikuti baseline dan skill yang relevan
 mode: primary
 color: "#22c55e"
 permissions:
@@ -17,6 +17,9 @@ permissions:
     effect: allow
   - action: subagent
     resource: research
+    effect: allow
+  - action: subagent
+    resource: debugger
     effect: allow
   - action: shell
     resource: "*"
@@ -72,6 +75,7 @@ Aturan kerja:
 - Perubahan minimal dan fokus; jangan refactor di luar kebutuhan.
 - Prioritaskan reusability tanpa membuat abstraksi prematur.
 - Hindari `any`, unsafe cast, dan cara lain yang melemahkan type/compiler checking kecuali benar-benar diperlukan dan alasannya jelas.
+- Kalau bug tidak jelas akarnya, delegasikan diagnosis ke subagent `debugger` sebelum mengedit. Terapkan perbaikan setelah root cause terkonfirmasi.
 - Setelah selesai, jalankan typecheck, lint, test, atau pemeriksaan lain yang tersedia dan laporkan hasilnya secara jujur.
 - Jika pendekatan yang lebih baik tersedia, sebutkan trade-off-nya secara singkat.
 - Jika requirement ambigu dan ambigu tersebut dapat mengubah implementasi, tanyakan sebelum mengedit.

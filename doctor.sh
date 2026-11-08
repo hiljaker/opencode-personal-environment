@@ -40,7 +40,23 @@ while IFS= read -r file; do
   if ! grep -qE '^permissions:' "$file"; then
     fail_check "missing native 'permissions' frontmatter: ${file#$SCRIPT_DIR/}"
   fi
+  if ! grep -qE '^mode: (primary|subagent)$' "$file"; then
+    fail_check "missing or invalid 'mode' frontmatter: ${file#$SCRIPT_DIR/}"
+  fi
 done < <(find "$SCRIPT_DIR/agents" -type f -name '*.md' -print | LC_ALL=C sort)
+
+if [[ -d "$SCRIPT_DIR/commands" ]]; then
+  while IFS= read -r file; do
+    agent_name="$(awk '/^agent:/ { sub(/^agent:[[:space:]]*/, ""); print; exit }' "$file")"
+    [[ -n "$agent_name" ]] || continue
+    target="$SCRIPT_DIR/agents/$agent_name.md"
+    if [[ ! -f "$target" ]]; then
+      fail_check "command references missing agent '$agent_name': ${file#$SCRIPT_DIR/}"
+    elif ! grep -qE '^mode: primary$' "$target"; then
+      fail_check "command references non-primary agent '$agent_name': ${file#$SCRIPT_DIR/}"
+    fi
+  done < <(find "$SCRIPT_DIR/commands" -type f -name '*.md' -print | LC_ALL=C sort)
+fi
 
 if grep -RniE 'ayopajak|purwadhika|garda bina utama|\btax\b|\bpajak\b|e[- ]?faktur|e[- ]?bupot|\bcoretax\b|\bpjap\b' "$SCRIPT_DIR/skills" >/dev/null 2>&1; then
   fail_check 'project/domain-specific references detected in skills'
