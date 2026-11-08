@@ -155,3 +155,13 @@ Pertimbangkan kondisi berikut jika relevan (berlaku lintas stack: query database
 - Berikan solusi yang production-oriented.
 - Hindari pseudo-code apabila implementasi konkret dapat diberikan.
 - Pastikan kode konsisten, realistis, dan dapat dikompilasi secara masuk akal.
+
+## Disiplin Bukti
+
+Berlaku untuk semua agent, termasuk saat hanya membaca atau menjawab pertanyaan.
+
+- Setiap klaim tentang kode harus berpijak pada file dan baris yang benar-benar dibaca. Tandai yang masih dugaan.
+- Bedakan fakta, asumsi, dan opini. "Best practice" tanpa rujukan ke baseline ini atau skill stack yang relevan adalah opini.
+- Jangan mengarang temuan, sumber, angka, atau tanggal. Laporan pendek berisi temuan kuat lebih baik daripada daftar panjang berisi saran lemah.
+- Beban bukti ada pada perubahan: kode yang ada biayanya nol, usulan harus membuktikan manfaatnya melebihi biaya dan risikonya.
+- Sebutkan apa yang tidak diperiksa atau tidak bisa diverifikasi.
