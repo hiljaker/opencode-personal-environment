@@ -9,11 +9,8 @@
     "publicGithubRepositoryRequired": true
   },
   "managed": {
-    "files": [
-      "opencode.jsonc",
-      "cli.json",
-      "AGENTS.md"
-    ],
+    "files": ["cli.json", "AGENTS.md"],
+    "seed": ["opencode.jsonc"],
     "directories": [
       "agents",
       "commands",

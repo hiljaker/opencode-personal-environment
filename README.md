@@ -20,22 +20,73 @@ curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environm
 
 The repository itself remains the source of truth; no permanent clone is required just to install or update the environment.
 
+### Optional MCP servers and skills
+
+The installer can also install third-party MCP servers and skills. It detects existing installations first and never overwrites them unless you explicitly select an update.
+
+Interactive checklist (`space` to toggle, `enter` to continue):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash
+```
+
+Non-interactive selection:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash -s -- --with mcp:codebase-memory-mcp,skill:frontend-design
+```
+
+Inspect detection without installing:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash -s -- --list-optional
+```
+
+Catalog:
+
+| Kind  | ID                            | Source                          |
+| ----- | ----------------------------- | ------------------------------- |
+| MCP   | `codebase-memory-mcp`         | DeusData/codebase-memory-mcp    |
+| MCP   | `browse`                      | opencode.ai/browse              |
+| Skill | `frontend-design`             | anthropics/skills               |
+| Skill | `impeccable`                  | pbakaus/impeccable              |
+| Skill | `security-audit`              | cloudflare/security-audit-skill |
+| Skill | `vercel-react-best-practices` | vercel-labs/agent-skills        |
+
+The catalog stores metadata and install recipes only. Third-party binaries and skill files are installed from their official sources with `curl` or `npx`, never copied into this repository.
+
+`--list-optional` prints the raw detection status: `not_installed`, `binary_only`, `configured`, `installed`, `shadowed`, `incomplete`, or `external_only`.
+
+Skills are installed into the canonical global directory `~/.agents/skills`. OpenCode also reads `~/.config/opencode/skills` with higher precedence. If a skill already exists in that directory, the installer treats it as a shadow copy: when you select update, the shadow copy is moved to the backup directory and the canonical copy becomes active. Shadow backups are kept under `~/.config/opencode-backups/<timestamp>/optional-skills/`.
+
+The skills CLI requires Node.js 22.20 or newer. `browse` also needs its Chromium extension paired after installation.
+
+Other options:
+
+- `--no-optional` skips the optional step.
+- `--dry-run` prints planned actions without writing.
+- `--refresh-config` backs up and replaces `opencode.jsonc` with the repository baseline.
+- `--yes` skips the confirmation screen.
+
 ## Local install
 
 ```bash
 ./install.sh
+./install.sh --list-optional
+./install.sh --with mcp:browse,skill:impeccable
 ```
 
-The installer targets OpenCode's global config directory. On macOS/Linux this follows `XDG_CONFIG_HOME` when set, otherwise `~/.config/opencode`. The repository currently manages `opencode.jsonc`, `cli.json`, `AGENTS.md`, `agents/`, `commands/`, `skills/`, `plugins/`, `tools/`, and `themes/`.
+The installer targets OpenCode's global config directory. On macOS/Linux this follows `XDG_CONFIG_HOME` when set, otherwise `~/.config/opencode`. `OPENCODE_CONFIG_DIR` overrides that path when set. The repository currently manages `cli.json`, `AGENTS.md`, `agents/`, `commands/`, `skills/`, `plugins/`, `tools/`, and `themes/`. `opencode.jsonc` is a seed file: it is written only when missing, so machine-local MCP configuration is preserved.
 
 ## What is included
 
-- Global `opencode.jsonc`
+- Global `opencode.jsonc` seed
 - Global `cli.json`
 - Global `AGENTS.md`
 - Reusable agents
 - Reusable slash commands
 - General stack skills for React/TypeScript, NestJS, Go/Gin/GORM, and Flutter/Riverpod
+- Optional third-party MCP server and skill catalog
 - Optional directories for plugins, tools, and themes
 - Backup, update, uninstall, and validation scripts
 
@@ -51,6 +102,10 @@ curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environm
 
 The installer backs up currently managed files before replacing them. It also removes files that this repository previously managed but no longer ships, while leaving unrelated files in the OpenCode config directory untouched.
 
+`opencode.jsonc` is never overwritten during an update. It is seeded only when missing, so MCP servers and other machine-local settings in that file survive. To replace it with the repository baseline on purpose, run with `--refresh-config`; the installer backs it up first.
+
+Optional MCP servers and skills are not part of the managed file state. They are detected from their own installation locations and are never removed by an update.
+
 ## Uninstall
 
 For a cloned repository:
@@ -59,7 +114,9 @@ For a cloned repository:
 ./uninstall.sh
 ```
 
-Uninstall only removes files previously installed by this environment. Unmanaged files are left alone.
+Uninstall only removes files previously installed by this environment. Unmanaged files are left alone. `opencode.jsonc` is preserved even when an older state file lists it, because it may contain machine-local MCP configuration.
+
+Optional MCP servers and skills installed from third-party sources are not removed. Manage them with their own tools, or remove them from the OpenCode config manually.
 
 ## Validate
 
@@ -67,7 +124,11 @@ Uninstall only removes files previously installed by this environment. Unmanaged
 ./doctor.sh
 ```
 
-The doctor checks repository structure, skill frontmatter, forbidden local-context references, and the target config directory.
+The doctor checks repository structure, script syntax, optional catalog consistency, skill frontmatter, forbidden local-context references, and the target config directory.
+
+## PowerShell
+
+`install.ps1` seeds `opencode.jsonc` only when missing, but the interactive optional checklist is currently bash-only. PowerShell support for optional MCP/skill installation is pending.
 
 ## Authentication and machine state
 

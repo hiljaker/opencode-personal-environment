@@ -19,12 +19,23 @@ REF="${OPENCODE_ENV_REF:-main}"
 usage() {
   cat <<USAGE
 Usage:
-  ./install.sh
-  curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/<ref>/install.sh | bash
+  ./install.sh [options]
+  curl -fsSL https://raw.githubusercontent.com/<owner>/<repo>/<ref>/install.sh | bash -s -- [options]
+
+Options:
+  --no-optional       Skip optional MCP servers and skills.
+  --with LIST         Comma-separated optional items (kind:id).
+  --list-optional     List optional items and their detection status.
+  --dry-run           Show planned actions without writing.
+  --refresh-config    Back up and replace opencode.jsonc with the repo baseline.
+  --yes               Skip the confirmation screen.
+  --help              Show this help.
 
 Environment overrides:
   OPENCODE_ENV_REPO    GitHub repository in owner/repository form.
   OPENCODE_ENV_REF     Branch or tag to install (default: main).
+  XDG_CONFIG_HOME      Base config directory (default: ~/.config).
+  OPENCODE_CONFIG_DIR  OpenCode config directory (overrides XDG_CONFIG_HOME/opencode).
 USAGE
 }
 

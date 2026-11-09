@@ -4,7 +4,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_BASE="${XDG_CONFIG_HOME:-$HOME/.config}"
 CONFIG_BASE="${CONFIG_BASE%/}"
-CONFIG_DIR="$CONFIG_BASE/opencode"
+CONFIG_DIR="${OPENCODE_CONFIG_DIR:-$CONFIG_BASE/opencode}"
+CONFIG_DIR="${CONFIG_DIR%/}"
 
 fail=0
 
@@ -56,6 +57,55 @@ if [[ -d "$SCRIPT_DIR/commands" ]]; then
       fail_check "command references non-primary agent '$agent_name': ${file#$SCRIPT_DIR/}"
     fi
   done < <(find "$SCRIPT_DIR/commands" -type f -name '*.md' -print | LC_ALL=C sort)
+fi
+
+for script in "$SCRIPT_DIR/install.sh" "$SCRIPT_DIR/uninstall.sh" "$SCRIPT_DIR/doctor.sh" "$SCRIPT_DIR/scripts/"*.sh; do
+  [[ -f "$script" ]] || continue
+  if bash -n "$script" 2>/dev/null; then
+    pass "syntax: ${script#$SCRIPT_DIR/}"
+  else
+    fail_check "syntax error: ${script#$SCRIPT_DIR/}"
+  fi
+done
+
+if grep -q '"seed"' "$SCRIPT_DIR/manifest.json"; then
+  pass 'manifest defines seed files'
+else
+  fail_check 'manifest does not define seed files'
+fi
+
+if grep -q 'SEED_ROOT_FILES=' "$SCRIPT_DIR/scripts/install-local.sh"; then
+  pass 'installer defines seed files'
+else
+  fail_check 'installer does not define seed files'
+fi
+
+if [[ -f "$SCRIPT_DIR/scripts/optional.sh" ]]; then
+  # shellcheck source=scripts/optional.sh
+  source "$SCRIPT_DIR/scripts/optional.sh"
+  if [[ "${#OPTIONAL_KINDS[@]}" -eq "${#OPTIONAL_IDS[@]}" && "${#OPTIONAL_IDS[@]}" -eq "${#OPTIONAL_LABELS[@]}" && "${#OPTIONAL_IDS[@]}" -eq "${#OPTIONAL_DESCRIPTIONS[@]}" && "${#OPTIONAL_IDS[@]}" -eq "${#OPTIONAL_SKILL_SOURCES[@]}" ]]; then
+    pass 'optional catalog arrays are consistent'
+  else
+    fail_check 'optional catalog arrays have different lengths'
+  fi
+  seen=""
+  for id in "${OPTIONAL_IDS[@]}"; do
+    case " $seen " in
+      *" $id "*) fail_check "duplicate optional id: $id" ;;
+    esac
+    seen="$seen $id"
+  done
+  for kind in "${OPTIONAL_KINDS[@]}"; do
+    case "$kind" in
+      mcp|skill) ;;
+      *) fail_check "invalid optional kind: $kind" ;;
+    esac
+  done
+  for i in "${!OPTIONAL_IDS[@]}"; do
+    if [[ "${OPTIONAL_KINDS[$i]}" == "skill" && -z "${OPTIONAL_SKILL_SOURCES[$i]}" ]]; then
+      fail_check "optional skill missing source: ${OPTIONAL_IDS[$i]}"
+    fi
+  done
 fi
 
 if grep -RniE 'ayopajak|purwadhika|garda bina utama|\btax\b|\bpajak\b|e[- ]?faktur|e[- ]?bupot|\bcoretax\b|\bpjap\b' "$SCRIPT_DIR/skills" >/dev/null 2>&1; then

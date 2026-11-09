@@ -9,7 +9,11 @@ if ($env:XDG_CONFIG_HOME) {
 } else {
     $ConfigBase = Join-Path $HOME '.config'
 }
-$ConfigDir = Join-Path $ConfigBase 'opencode'
+if ($env:OPENCODE_CONFIG_DIR) {
+    $ConfigDir = $env:OPENCODE_CONFIG_DIR
+} else {
+    $ConfigDir = Join-Path $ConfigBase 'opencode'
+}
 $BackupRoot = Join-Path $ConfigBase 'opencode-backups'
 $Timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $BackupDir = Join-Path $BackupRoot $Timestamp
@@ -21,6 +25,10 @@ New-Item -ItemType Directory -Force -Path $BackupDir | Out-Null
 $SourceFiles = New-Object System.Collections.Generic.List[string]
 foreach ($relative in $Manifest.managed.files) {
     $SourceFiles.Add($relative)
+}
+$SeedFiles = @()
+if ($Manifest.managed.seed) {
+    $SeedFiles = @($Manifest.managed.seed)
 }
 foreach ($directory in $Manifest.managed.directories) {
     $sourceDir = Join-Path $Repo $directory
@@ -54,6 +62,20 @@ foreach ($relative in $SourceFiles) {
     Copy-Item -Force $source $destination
 }
 
+# Seed files are written only when missing. opencode.jsonc may contain
+# machine-local MCP configuration, so updates must not replace it.
+foreach ($relative in $SeedFiles) {
+    $source = Join-Path $Repo $relative
+    $destination = Join-Path $ConfigDir $relative
+    if (-not (Test-Path $source -PathType Leaf)) {
+        throw "Seed source file missing: $relative"
+    }
+    if (-not (Test-Path $destination)) {
+        New-Item -ItemType Directory -Force -Path (Split-Path $destination) | Out-Null
+        Copy-Item -Force $source $destination
+    }
+}
+
 $State = [ordered]@{
     schemaVersion = 1
     repository = $Repo
@@ -65,7 +87,9 @@ $State | ConvertTo-Json -Depth 5 | Set-Content -Encoding UTF8 $StateFile
 Write-Host 'OpenCode environment installed.'
 Write-Host "  Config:  $ConfigDir"
 Write-Host "  Files:   $($SourceFiles.Count)"
+Write-Host "  Seed:    $($SeedFiles.Count) (written only when missing)"
 Write-Host "  Backup:  $BackupDir"
 Write-Host "  Existing managed files backed up: $BackedUp"
 Write-Host ''
 Write-Host 'Next: authenticate providers locally in OpenCode (for example, /connect), then choose a model with /models.'
+Write-Host 'Optional MCP/skill checklist is available in the bash installer; PowerShell support is pending.'

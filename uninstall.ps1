@@ -5,7 +5,11 @@ if ($env:XDG_CONFIG_HOME) {
 } else {
     $ConfigBase = Join-Path $HOME '.config'
 }
-$ConfigDir = Join-Path $ConfigBase 'opencode'
+if ($env:OPENCODE_CONFIG_DIR) {
+    $ConfigDir = $env:OPENCODE_CONFIG_DIR
+} else {
+    $ConfigDir = Join-Path $ConfigBase 'opencode'
+}
 $StateFile = Join-Path $ConfigDir '.personal-opencode-environment-state.json'
 
 if (-not (Test-Path $StateFile)) {
@@ -15,7 +19,8 @@ if (-not (Test-Path $StateFile)) {
 
 $State = Get-Content $StateFile -Raw | ConvertFrom-Json
 $Removed = 0
-foreach ($relative in $State.files) {
+$ManagedFiles = @($State.files | Where-Object { $_ -ne 'opencode.jsonc' })
+foreach ($relative in $ManagedFiles) {
     $target = Join-Path $ConfigDir $relative
     if (Test-Path $target -PathType Leaf) {
         Remove-Item -Force $target
@@ -24,7 +29,7 @@ foreach ($relative in $State.files) {
 }
 
 # Remove empty directories from deepest to shallowest, without touching config root.
-$dirs = @($State.files | ForEach-Object { Split-Path (Join-Path $ConfigDir $_) -Parent } | Sort-Object -Unique)
+$dirs = @($ManagedFiles | ForEach-Object { Split-Path (Join-Path $ConfigDir $_) -Parent } | Sort-Object -Unique)
 foreach ($dir in $dirs | Sort-Object Length -Descending) {
     while ($dir -and $dir -ne $ConfigDir -and (Test-Path $dir)) {
         if ((Get-ChildItem -Force $dir | Select-Object -First 1)) { break }
@@ -37,3 +42,5 @@ Remove-Item -Force $StateFile
 Write-Host 'OpenCode environment uninstalled.'
 Write-Host "  Removed files: $Removed"
 Write-Host "  Backups remain under: $(Join-Path $ConfigBase 'opencode-backups')"
+Write-Host ''
+Write-Host 'Optional MCP servers and skills installed from third-party sources are not removed.'
