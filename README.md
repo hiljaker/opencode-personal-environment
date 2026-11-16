@@ -33,7 +33,7 @@ curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environm
 Non-interactive selection:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash -s -- --with mcp:codebase-memory-mcp,skill:frontend-design
+curl -fsSL https://raw.githubusercontent.com/hiljaker/opencode-personal-environment/main/install.sh | bash -s -- --with mcp:codebase-memory-mcp,skill:impeccable
 ```
 
 Inspect detection without installing:
@@ -48,10 +48,10 @@ Catalog:
 | ----- | ----------------------------- | ------------------------------- |
 | MCP   | `codebase-memory-mcp`         | DeusData/codebase-memory-mcp    |
 | MCP   | `browse`                      | opencode.ai/browse              |
-| Skill | `frontend-design`             | anthropics/skills               |
 | Skill | `impeccable`                  | pbakaus/impeccable              |
 | Skill | `security-audit`              | cloudflare/security-audit-skill |
 | Skill | `vercel-react-best-practices` | vercel-labs/agent-skills        |
+| Skill | `doc-coauthoring`             | anthropics/skills               |
 
 The catalog stores metadata and install recipes only. Third-party binaries and skill files are installed from their official sources with `curl` or `npx`, never copied into this repository.
 

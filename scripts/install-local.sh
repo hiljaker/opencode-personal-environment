@@ -53,10 +53,10 @@ Options:
 Optional item IDs:
   mcp:codebase-memory-mcp
   mcp:browse
-  skill:frontend-design
   skill:impeccable
   skill:security-audit
   skill:vercel-react-best-practices
+  skill:doc-coauthoring
 
 Environment overrides:
   XDG_CONFIG_HOME      Base config directory (default: ~/.config).

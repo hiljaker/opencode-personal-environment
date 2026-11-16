@@ -9,23 +9,23 @@
 source "$SCRIPT_DIR/scripts/checklist.sh"
 
 OPTIONAL_KINDS=(mcp mcp skill skill skill skill)
-OPTIONAL_IDS=(codebase-memory-mcp browse frontend-design impeccable security-audit vercel-react-best-practices)
-OPTIONAL_LABELS=(codebase-memory browse frontend-design impeccable security-audit vercel-react-best-practices)
+OPTIONAL_IDS=(codebase-memory-mcp browse impeccable security-audit vercel-react-best-practices doc-coauthoring)
+OPTIONAL_LABELS=(codebase-memory browse impeccable security-audit vercel-react-best-practices doc-coauthoring)
 OPTIONAL_DESCRIPTIONS=(
   "Codebase knowledge graph MCP server"
   "Browser automation MCP server"
-  "Anthropic frontend design guidance"
   "Frontend design and UX review"
   "Cloudflare security audit"
   "Vercel React and Next.js performance rules"
+  "Anthropic documentation co-authoring workflow"
 )
 OPTIONAL_SKILL_SOURCES=(
   ""
   ""
-  "anthropics/skills"
   "pbakaus/impeccable"
   "cloudflare/security-audit-skill"
   "vercel-labs/agent-skills"
+  "anthropics/skills"
 )
 
 optional_key_kind() {
@@ -581,7 +581,7 @@ optional_main() {
     fi
     if [[ "$rc" -eq 2 ]]; then
       printf 'Optional install skipped: no interactive terminal.\n' >&2
-      printf 'Use --with mcp:codebase-memory-mcp,skill:frontend-design to select items.\n' >&2
+      printf 'Use --with mcp:codebase-memory-mcp,skill:impeccable to select items.\n' >&2
       return 0
     fi
     if [[ "$rc" -ne 0 ]]; then
